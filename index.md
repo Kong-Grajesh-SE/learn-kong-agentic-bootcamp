@@ -6,7 +6,7 @@ hero:
   text: "& MCP Bootcamp"
   tagline: "Secure and proxy MCP tool calls. OAuth2/PKCE authentication. Agent-to-Agent routing. Connect VS Code and Claude to Kong-protected endpoints."
   image:
-    src: /kong-gateway-logo.svg
+    src: /kong-logomark-lime.svg
     alt: Kong Agentic AI & MCP
   actions:
     - theme: brand
