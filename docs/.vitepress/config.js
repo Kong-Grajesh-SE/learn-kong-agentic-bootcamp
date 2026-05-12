@@ -8,7 +8,7 @@ export default defineConfig({
   outDir: '../dist',
   cacheDir: '../.vitepress-cache',
 
-  base: '/learn-agentic-mcp/',
+  base: '/learn-kong-agentic-bootcamp/',
 
   appearance: 'force-dark',
   cleanUrls: true,
@@ -29,13 +29,13 @@ export default defineConfig({
   ],
 
   head: [
-    ['link', { rel: 'icon',           href: '/learn-agentic-mcp/favicon.png', type: 'image/png', sizes: '32x32' }],
-    ['link', { rel: 'shortcut icon',  href: '/learn-agentic-mcp/favicon.png', type: 'image/png' }],
-    ['link', { rel: 'apple-touch-icon', href: '/learn-agentic-mcp/favicon.png' }],
+    ['link', { rel: 'icon',           href: '/learn-kong-agentic-bootcamp/favicon.png', type: 'image/png', sizes: '32x32' }],
+    ['link', { rel: 'shortcut icon',  href: '/learn-kong-agentic-bootcamp/favicon.png', type: 'image/png' }],
+    ['link', { rel: 'apple-touch-icon', href: '/learn-kong-agentic-bootcamp/favicon.png' }],
     ['meta', { name: 'theme-color', content: '#000F06' }],
     ['meta', { property: 'og:title', content: 'Kong Agentic AI & MCP Bootcamp' }],
     ['meta', { property: 'og:description', content: 'Hands-on Agentic AI labs: MCP proxy, OAuth2/PKCE, A2A routing' }],
-    ['meta', { property: 'og:image', content: '/learn-agentic-mcp/kong-gateway-logo.svg' }],
+    ['meta', { property: 'og:image', content: '/learn-kong-agentic-bootcamp/kong-gateway-logo.svg' }],
   ],
 
   markdown: {
@@ -82,7 +82,7 @@ export default defineConfig({
     ],
 
     editLink: {
-      pattern: 'https://github.com/Kong-Grajesh-SE/learn-agentic-mcp/edit/main/:path',
+      pattern: 'https://github.com/Kong-Grajesh-SE/learn-kong-agentic-bootcamp/edit/main/:path',
       text: 'Edit this page on GitHub',
     },
 
@@ -92,7 +92,7 @@ export default defineConfig({
     },
 
     socialLinks: [
-      { icon: 'github', link: 'https://github.com/Kong-Grajesh-SE/learn-agentic-mcp' },
+      { icon: 'github', link: 'https://github.com/Kong-Grajesh-SE/learn-kong-agentic-bootcamp' },
     ],
 
     footer: {
