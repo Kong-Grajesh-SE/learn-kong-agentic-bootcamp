@@ -59,7 +59,18 @@ export default defineConfig({
         ],
       },
       {
-        text: '🔗 Resources',
+        text: '� Specialist Bootcamps',
+        items: [
+          { text: '🔀 API Gateway Bootcamp',  link: 'https://kong-grajesh-se.github.io/learn-kong-gateway/', target: '_blank' },
+          { text: '🤖 AI Gateway Bootcamp',   link: 'https://kong-grajesh-se.github.io/learn-kong-ai-gateway/', target: '_blank' },
+          { text: '🌐 Developer Portal',      link: 'https://kong-grajesh-se.github.io/learn-kong-dev-portal/', target: '_blank' },
+          { text: '🔄 APIOps with decK',      link: 'https://kong-grajesh-se.github.io/learn-kong-apiops-bootcamp/', target: '_blank' },
+          { text: '🎮 Insomnia Bootcamp',     link: 'https://kong-grajesh-se.github.io/learn-insomnia/', target: '_blank' },
+          { text: '🤝 Bring Your Own Agent',  link: 'https://kong-grajesh-se.github.io/bring-your-own-agent/', target: '_blank' },
+        ],
+      },
+      {
+        text: '�🔗 Resources',
         items: [
           { text: '📖 Agentic AI Docs', link: 'https://developer.konghq.com/ai-gateway/', target: '_blank' },
           { text: '🧩 MCP Proxy Plugin', link: 'https://developer.konghq.com/plugins/ai-mcp-proxy/', target: '_blank' },
