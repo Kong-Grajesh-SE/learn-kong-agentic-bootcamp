@@ -1,8 +1,8 @@
 import { defineConfig } from 'vitepress'
 
 export default defineConfig({
-  title: 'Kong Agentic AI & MCP Bootcamp',
-  description: 'Kong Partner Enablement — Agentic AI and MCP: secure MCP endpoints, OAuth2/PKCE, and Agent-to-Agent routing on Konnect.',
+  title: 'Kong Agentic AI Bootcamp',
+  description: 'Kong Partner Enablement - Agentic AI: MCP Proxy (4 modes), MCP OAuth2/PKCE, Agent-to-Agent routing, and AI Custom Guardrail on Kong 3.14+.',
 
   srcDir: '..',
   outDir: '../dist',
@@ -16,7 +16,10 @@ export default defineConfig({
   ignoreDeadLinks: true,
 
   rewrites: {
-    'module-01-agentic-mcp/README.md': 'module-01-agentic-mcp/index.md',
+    'module-01-mcp-proxy/README.md': 'module-01-mcp-proxy/index.md',
+    'module-02-mcp-oauth2/README.md': 'module-02-mcp-oauth2/index.md',
+    'module-03-a2a-agents/README.md': 'module-03-a2a-agents/index.md',
+    'module-04-custom-guardrail/README.md': 'module-04-custom-guardrail/index.md',
   },
 
   srcExclude: [
@@ -33,8 +36,8 @@ export default defineConfig({
     ['link', { rel: 'shortcut icon',  href: '/learn-kong-agentic-bootcamp/favicon.png', type: 'image/png' }],
     ['link', { rel: 'apple-touch-icon', href: '/learn-kong-agentic-bootcamp/favicon.png' }],
     ['meta', { name: 'theme-color', content: '#000F06' }],
-    ['meta', { property: 'og:title', content: 'Kong Agentic AI & MCP Bootcamp' }],
-    ['meta', { property: 'og:description', content: 'Hands-on Agentic AI labs: MCP proxy, OAuth2/PKCE, A2A routing' }],
+    ['meta', { property: 'og:title', content: 'Kong Agentic AI Bootcamp' }],
+    ['meta', { property: 'og:description', content: 'Hands-on Agentic AI labs: MCP Proxy (4 modes), OAuth2/PKCE, A2A routing, AI Custom Guardrail' }],
     ['meta', { property: 'og:image', content: '/learn-kong-agentic-bootcamp/kong-gateway-logo.svg' }],
   ],
 
@@ -45,21 +48,27 @@ export default defineConfig({
 
   themeConfig: {
     logo: '/kong-logomark-lime.svg',
-    siteTitle: 'Agentic AI & MCP Bootcamp',
+    siteTitle: 'Agentic AI Bootcamp',
 
     nav: [
       { text: '🏠 Home', link: '/' },
       {
-        text: '📚 Module',
+        text: '🚀 Getting Started',
         items: [
-          { text: '📋 Overview',          link: '/module-01-agentic-mcp/' },
-          { text: '🔌 MCP Proxy',         link: '/module-01-agentic-mcp/labs/08-mcp-proxy' },
-          { text: '🔐 MCP + OAuth2',      link: '/module-01-agentic-mcp/labs/08-mcp-oauth2' },
-          { text: '🤝 A2A Agents',        link: '/module-01-agentic-mcp/labs/08-a2a-agents' },
+          { text: '✅ Prerequisites', link: '/prerequisites' },
         ],
       },
       {
-        text: '� Specialist Bootcamps',
+        text: '📚 Modules',
+        items: [
+          { text: '01 - MCP Proxy (4 modes)',    link: '/module-01-mcp-proxy/' },
+          { text: '02 - MCP + OAuth2',           link: '/module-02-mcp-oauth2/' },
+          { text: '03 - A2A Agent Routing',      link: '/module-03-a2a-agents/' },
+          { text: '04 - AI Custom Guardrail',    link: '/module-04-custom-guardrail/' },
+        ],
+      },
+      {
+        text: '🔗 Specialist Bootcamps',
         items: [
           { text: '🔀 API Gateway Bootcamp',  link: 'https://kong-grajesh-se.github.io/learn-kong-gateway/', target: '_blank' },
           { text: '🤖 AI Gateway Bootcamp',   link: 'https://kong-grajesh-se.github.io/learn-kong-ai-gateway/', target: '_blank' },
@@ -67,27 +76,62 @@ export default defineConfig({
           { text: '🔄 APIOps with decK',      link: 'https://kong-grajesh-se.github.io/learn-kong-apiops-bootcamp/', target: '_blank' },
           { text: '🎮 Insomnia Bootcamp',     link: 'https://kong-grajesh-se.github.io/learn-insomnia/', target: '_blank' },
           { text: '🤝 Bring Your Own Agent',  link: 'https://kong-grajesh-se.github.io/bring-your-own-agent/', target: '_blank' },
+          { text: '🌋 Volcano SDK Bootcamp', link: 'https://kong-grajesh-se.github.io/learn-volcano-sdk/', target: '_blank' },
         ],
       },
       {
-        text: '�🔗 Resources',
+        text: '🔗 Resources',
         items: [
-          { text: '📖 Agentic AI Docs', link: 'https://developer.konghq.com/ai-gateway/', target: '_blank' },
-          { text: '🧩 MCP Proxy Plugin', link: 'https://developer.konghq.com/plugins/ai-mcp-proxy/', target: '_blank' },
-          { text: '☁️ Konnect',          link: 'https://cloud.konghq.com', target: '_blank' },
+          { text: '📖 Agentic AI Docs',             link: 'https://developer.konghq.com/ai-gateway/', target: '_blank' },
+          { text: '🔌 ai-mcp-proxy plugin',          link: 'https://developer.konghq.com/plugins/ai-mcp-proxy/', target: '_blank' },
+          { text: '🔐 ai-mcp-oauth2 plugin',         link: 'https://developer.konghq.com/plugins/ai-mcp-oauth2/', target: '_blank' },
+          { text: '🛡️ ai-custom-guardrail plugin',   link: 'https://developer.konghq.com/plugins/ai-custom-guardrail/', target: '_blank' },
+          { text: '☁️ Konnect',                      link: 'https://cloud.konghq.com', target: '_blank' },
         ],
       },
     ],
 
     sidebar: [
       {
-        text: '🛠️ Agentic AI & MCP',
+        text: '🚀 Getting Started',
         collapsed: false,
         items: [
-          { text: '📋 Overview',          link: '/module-01-agentic-mcp/' },
-          { text: '🔌 Lab: MCP Proxy',    link: '/module-01-agentic-mcp/labs/08-mcp-proxy' },
-          { text: '🔐 Lab: MCP + OAuth2', link: '/module-01-agentic-mcp/labs/08-mcp-oauth2' },
-          { text: '🤝 Lab: A2A Agents',   link: '/module-01-agentic-mcp/labs/08-a2a-agents' },
+          { text: '📋 Prerequisites', link: '/prerequisites' },
+        ],
+      },
+      {
+        text: '🔌 Module 01 - MCP Proxy',
+        collapsed: false,
+        items: [
+          { text: 'Overview',                         link: '/module-01-mcp-proxy/' },
+          { text: 'Lab 01-A: Passthrough Listener',   link: '/module-01-mcp-proxy/labs/01-passthrough-listener' },
+          { text: 'Lab 01-B: Conversion Listener',    link: '/module-01-mcp-proxy/labs/01-conversion-listener' },
+          { text: 'Lab 01-C: Conversion Aggregation', link: '/module-01-mcp-proxy/labs/01-conversion-aggregation' },
+        ],
+      },
+      {
+        text: '🔐 Module 02 - MCP + OAuth2',
+        collapsed: false,
+        items: [
+          { text: 'Overview',                link: '/module-02-mcp-oauth2/' },
+          { text: 'Lab 02-A: MCP + OAuth2',  link: '/module-02-mcp-oauth2/labs/02-mcp-oauth2' },
+        ],
+      },
+      {
+        text: '🤝 Module 03 - A2A Agent Routing',
+        collapsed: false,
+        items: [
+          { text: 'Overview',               link: '/module-03-a2a-agents/' },
+          { text: 'Lab 03-A: A2A Routing',  link: '/module-03-a2a-agents/labs/03-a2a-routing' },
+        ],
+      },
+      {
+        text: '🛡️ Module 04 - AI Custom Guardrail',
+        collapsed: false,
+        items: [
+          { text: 'Overview',                    link: '/module-04-custom-guardrail/' },
+          { text: 'Lab 04-A: Input Guardrail',   link: '/module-04-custom-guardrail/labs/04-input-guardrail' },
+          { text: 'Lab 04-B: Output Guardrail',  link: '/module-04-custom-guardrail/labs/04-output-guardrail' },
         ],
       },
     ],
@@ -107,8 +151,8 @@ export default defineConfig({
     ],
 
     footer: {
-      message: 'Kong Agentic AI & MCP Bootcamp — Partner Enablement',
-      copyright: '© Kong Inc. 2026 — The AI Connectivity Company',
+      message: 'Kong Agentic AI Bootcamp - Partner Enablement',
+      copyright: '© Kong Inc. 2026 - The AI Connectivity Company',
     },
 
     search: { provider: 'local' },
