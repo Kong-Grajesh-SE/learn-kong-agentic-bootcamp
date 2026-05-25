@@ -10,6 +10,8 @@ You already operate an MCP server (the Express travel backend here, or a third-p
 
 ## What you'll have at the end
 
+![MCP Passthrough Listener](../../public/mcp_passthrough_listener.png)
+
 - `POST /mcp/passthrough` accepts MCP JSON-RPC requests from any client
 - Kong forwards requests unchanged to the upstream MCP server
 - Rate limiting applied - 60 tool calls per minute

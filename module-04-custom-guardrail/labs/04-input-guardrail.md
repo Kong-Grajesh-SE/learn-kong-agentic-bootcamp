@@ -2,6 +2,8 @@
 
 > **Goal.** In ~25 minutes you'll configure `ai-custom-guardrail` to inspect every incoming prompt before it reaches the LLM. Harmful requests are blocked with a structured error message; safe prompts are proxied normally.
 
+![AI Custom Guardrail Architecture](../../public/custom_guardrail_architecture.png)
+
 ---
 
 ## Before you start

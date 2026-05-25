@@ -15,20 +15,7 @@ Kong configured as an MCP gateway with all four `ai-mcp-proxy` modes, so you can
 | `conversion-only` | Defines reusable tool specs, no live endpoint | Shared tool library for multi-team environments |
 | `listener` | Aggregates `conversion-only` tools via tags onto one endpoint | Single MCP entry-point across multiple services |
 
-```
-MCP Client (VS Code / Claude / curl)
-         │
-         ▼
-   Kong AI Gateway 3.14  ←── ai-mcp-proxy plugin
-         │
-         ├── passthrough-listener ────────────────▶ Upstream MCP Server
-         │
-         ├── conversion-listener ─────────────────▶ REST API (OpenAPI)
-         │
-         ├── conversion-only (no client endpoint)
-         │         ↓ tags
-         └── listener ────────────────────────────▶ Aggregated REST APIs
-```
+![MCP Gateway Architecture](../public/mcp_gateway_architecture.png)
 
 ## Who this module is for
 

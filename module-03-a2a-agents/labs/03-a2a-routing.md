@@ -2,6 +2,8 @@
 
 > **Goal.** In ~40 minutes you'll configure Kong as the router between an orchestrator agent and three specialised sub-agents. The gateway enforces identity (key-auth), controls call volume (rate-limiting per agent), and provides distributed tracing (OpenTelemetry).
 
+![A2A Routing Architecture](../../public/a2a_routing_architecture.png)
+
 ---
 
 ## Before you start

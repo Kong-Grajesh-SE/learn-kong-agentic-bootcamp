@@ -63,20 +63,7 @@ The docs site will be available at `http://localhost:5173`.
 
 ## Architecture
 
-```
-VS Code Copilot / Claude Desktop / Orchestrator Agent
-        │
-        ▼
-  Kong Gateway 3.14+ (Konnect Hybrid)
-  ├── /mcp/tools          ai-mcp-proxy (passthrough or conversion mode)
-  ├── /mcp-oauth/tools    ai-mcp-oauth2 + ai-mcp-proxy (PKCE-secured)
-  ├── /a2a/*              key-auth + rate-limiting + opentelemetry
-  └── /ai/proxy/chat      ai-proxy-advanced + ai-custom-guardrail
-        │
-        ▼
-  Express MCP Backend (:3001)
-  Tools: search_flights, book_flight, get_weather, search_hotels, book_hotel
-```
+![Bootcamp Overview Architecture](./public/bootcamp_overview_architecture.png)
 
 ## Stack
 

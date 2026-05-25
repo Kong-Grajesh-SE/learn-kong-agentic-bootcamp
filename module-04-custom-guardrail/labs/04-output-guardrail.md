@@ -2,6 +2,8 @@
 
 > **Goal.** In ~25 minutes you'll extend the plugin from Lab 04-A to also inspect the LLM's response. You'll add the OUTPUT phase, include `$(source)` in block messages, and configure custom metrics so every guardrail decision writes an observable audit trail.
 
+![AI Custom Guardrail Architecture](../../public/custom_guardrail_architecture.png)
+
 ---
 
 ## Before you start

@@ -2,6 +2,8 @@
 
 > **Goal.** In ~45 minutes you'll create a secured MCP route protected by `ai-mcp-oauth2` + Keycloak, then connect VS Code GitHub Copilot and Claude Desktop as authenticated MCP clients.
 
+![OAuth2 + PKCE Flow](../../public/mcp_oauth2_flow.png)
+
 ---
 
 ## Before you start

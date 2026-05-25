@@ -10,14 +10,7 @@ In multi-team environments, each team owns their own `conversion-only` plugin an
 
 ## What you'll have at the end
 
-```
-Team A  ──── conversion-only (tag: "internal-tools") ──── REST backend A
-Team B  ──── conversion-only (tag: "internal-tools") ──── REST backend B
-                    │
-                    │  listener aggregates by tag
-                    ▼
-GET /mcp/all-tools  ──── returns tools from Team A + Team B
-```
+![MCP Aggregation Architecture](../../public/mcp_aggregation_architecture.png)
 
 ---
 
@@ -243,17 +236,7 @@ curl -s -X POST http://localhost:8000/mcp/all-tools \
 
 ## How the three modes fit together
 
-```
-conversion-only  ──┐
-  tag: "my-tools"  │
-                   │  listener binds by tag
-conversion-only  ──┤  server.tag: "my-tools"
-  tag: "my-tools"  │
-                   │
-                   └──▶ POST /mcp/all-tools (listener endpoint)
-                              ↓
-                    MCP Client sees unified tool list
-```
+![MCP Modes Integration](../../public/mcp_modes_integration.png)
 
 | Mode | Has MCP endpoint? | Converts REST? | Needed by |
 |---|---|---|---|

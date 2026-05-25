@@ -14,16 +14,7 @@ You have an existing REST API and want to expose it to MCP clients through Kong,
 - ACL rules controlling which Consumers can discover and invoke which tools
 - Rate limiting on the MCP endpoint
 
-```
-MCP Client
-    │ tools/list  ──▶  Kong reads REST API → returns MCP tool defs
-    │ tools/call  ──▶  Kong maps to HTTP endpoint → calls REST API → wraps response in MCP
-    ▼
-Kong ai-mcp-proxy (conversion-listener)
-    │
-    ▼
-REST Backend (Express :3001/mcp/tools)
-```
+![MCP Conversion Listener](../../public/mcp_conversion_listener.png)
 
 ---
 
