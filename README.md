@@ -2,6 +2,8 @@
 
 A hands-on bootcamp for securing and proxying AI agent traffic with Kong Gateway 3.14+. Four modules covering MCP Proxy, MCP OAuth2, Agent-to-Agent routing, and AI content guardrails.
 
+![Bootcamp Recap](./public/bootcamp_recap.png)
+
 ## What You'll Learn
 
 - Proxy MCP tool calls using all four modes of the `ai-mcp-proxy` plugin
