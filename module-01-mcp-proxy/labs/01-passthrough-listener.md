@@ -23,7 +23,7 @@ You already operate an MCP server (the Express travel backend here, or a third-p
 
 ```bash
 # Verify Kong 3.14 is running
-curl -s http://localhost:8001 | jq '.version'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID | jq '.version'
 # "3.14.x"
 
 # Verify MCP backend is up
@@ -41,7 +41,7 @@ curl -s -X POST http://localhost:3001/mcp/tools \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/services \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-backend",
@@ -64,14 +64,14 @@ services:
 
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/services/mcp-backend | jq '.name'` returns `"mcp-backend"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend | jq '.name'` returns `"mcp-backend"`.
 
 ---
 
 ## Step 2 - Create the passthrough route (2 min)
 
 ```bash
-curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-passthrough",
@@ -82,7 +82,7 @@ curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
   }' | jq '{id, name}'
 ```
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/routes/mcp-passthrough | jq '.name'` returns `"mcp-passthrough"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-passthrough | jq '.name'` returns `"mcp-passthrough"`.
 
 ---
 
@@ -91,7 +91,7 @@ curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-passthrough/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-passthrough/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-proxy",
@@ -133,7 +133,7 @@ services:
 | `timeout` | Milliseconds before Kong aborts the upstream call |
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/routes/mcp-passthrough/plugins | jq '.data[0].config.mode'` returns `"passthrough-listener"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-passthrough/plugins | jq '.data[0].config.mode'` returns `"passthrough-listener"`.
 
 ---
 
@@ -205,7 +205,7 @@ Standard Kong plugins layer on top of any `ai-mcp-proxy` route without special c
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-passthrough/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-passthrough/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "rate-limiting",
@@ -248,19 +248,19 @@ curl -si -X POST http://localhost:8000/mcp/passthrough \
 
 ```bash [Admin API]
 # Create a Consumer for the agent
-curl -s -X POST http://localhost:8001/consumers \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers \
   -H "Content-Type: application/json" \
   -d '{"username":"travel-agent","tags":["module-01"]}' \
   | jq '{id, username}'
 
 # Assign an API key
-curl -s -X POST http://localhost:8001/consumers/travel-agent/key-auth \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers/travel-agent/key-auth \
   -H "Content-Type: application/json" \
   -d '{"key":"agent-key-passthrough-001"}' \
   | jq '{key, consumer: .consumer.username}'
 
 # Attach key-auth to the route
-curl -s -X POST http://localhost:8001/routes/mcp-passthrough/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-passthrough/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "key-auth",

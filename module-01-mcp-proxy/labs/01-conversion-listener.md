@@ -23,7 +23,7 @@ You have an existing REST API and want to expose it to MCP clients through Kong,
 Lab 01-A must be completed - the `mcp-backend` Service already exists.
 
 ```bash
-curl -s http://localhost:8001/services/mcp-backend | jq '.name'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend | jq '.name'
 # "mcp-backend"
 ```
 
@@ -38,7 +38,7 @@ curl -s http://localhost:8001/services/mcp-backend | jq '.name'
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-conversion",
@@ -62,7 +62,7 @@ services:
 
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/routes/mcp-conversion | jq '.name'` returns `"mcp-conversion"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion | jq '.name'` returns `"mcp-conversion"`.
 
 ---
 
@@ -71,7 +71,7 @@ services:
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-conversion/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-proxy",
@@ -114,7 +114,7 @@ routes:
 The `server.tag` value is used later by `listener` mode plugins (Lab 01-C) to discover and aggregate tools from this plugin. Think of it as a tool catalogue identifier.
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/routes/mcp-conversion/plugins | jq '.data[0].config.mode'` returns `"conversion-listener"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion/plugins | jq '.data[0].config.mode'` returns `"conversion-listener"`.
 
 ---
 
@@ -187,20 +187,20 @@ curl -s -X POST http://localhost:8000/mcp/tools \
 
 ```bash [Admin API]
 # Consumer: premium tier - can use all tools including book_flight, book_hotel
-curl -s -X POST http://localhost:8001/consumers \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers \
   -H "Content-Type: application/json" \
   -d '{"username":"premium-agent","tags":["module-01"]}' | jq '{id, username}'
 
-curl -s -X POST http://localhost:8001/consumers/premium-agent/key-auth \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers/premium-agent/key-auth \
   -H "Content-Type: application/json" \
   -d '{"key":"premium-key-001"}' | jq '{key}'
 
 # Consumer: read-only tier - can search but not book
-curl -s -X POST http://localhost:8001/consumers \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers \
   -H "Content-Type: application/json" \
   -d '{"username":"readonly-agent","tags":["module-01"]}' | jq '{id, username}'
 
-curl -s -X POST http://localhost:8001/consumers/readonly-agent/key-auth \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers/readonly-agent/key-auth \
   -H "Content-Type: application/json" \
   -d '{"key":"readonly-key-002"}' | jq '{key}'
 ```
@@ -225,7 +225,7 @@ consumers:
 
 ```bash [Admin API]
 # key-auth plugin
-curl -s -X POST http://localhost:8001/routes/mcp-conversion/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "key-auth",
@@ -233,10 +233,10 @@ curl -s -X POST http://localhost:8001/routes/mcp-conversion/plugins \
   }' | jq '{id, name}'
 
 # Update ai-mcp-proxy to add default_acl
-PLUGIN_ID=$(curl -s http://localhost:8001/routes/mcp-conversion/plugins \
+PLUGIN_ID=$(curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion/plugins \
   | jq -r '.data[] | select(.name=="ai-mcp-proxy") | .id')
 
-curl -s -X PATCH http://localhost:8001/plugins/$PLUGIN_ID \
+curl -s -X PATCH https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/plugins/$PLUGIN_ID \
   -H "Content-Type: application/json" \
   -d '{
     "config": {
@@ -336,7 +336,7 @@ Per-tool `acl` does NOT inherit `default_acl` - it's an all-or-nothing override.
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-conversion/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion/plugins \
   -H "Content-Type: application/json" \
   -d '{"name":"rate-limiting","config":{"minute":60,"policy":"local"}}' \
   | jq '{id, name}'

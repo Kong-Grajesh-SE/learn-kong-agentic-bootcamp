@@ -19,7 +19,7 @@ In multi-team environments, each team owns their own `conversion-only` plugin an
 Labs 01-A and 01-B must be completed. The `mcp-backend` Service and `mcp-conversion` route already exist.
 
 ```bash
-curl -s http://localhost:8001/routes/mcp-conversion | jq '.name'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-conversion | jq '.name'
 # "mcp-conversion"
 ```
 
@@ -32,7 +32,7 @@ curl -s http://localhost:8001/routes/mcp-conversion | jq '.name'
 ### Create the anchor route
 
 ```bash
-curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-weather-def",
@@ -48,7 +48,7 @@ curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-weather-def/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-weather-def/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-proxy",
@@ -92,7 +92,7 @@ routes:
 ## Step 2 - Create a second `conversion-only` plugin (simulating Team B) (5 min)
 
 ```bash
-curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-flights-def",
@@ -106,7 +106,7 @@ curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-flights-def/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-flights-def/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-proxy",
@@ -147,7 +147,7 @@ The `listener` creates the actual MCP endpoint. It binds to `conversion-only` pl
 ### Create the aggregation route
 
 ```bash
-curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-unified",
@@ -163,7 +163,7 @@ curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/mcp-unified/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-unified/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-proxy",
@@ -206,7 +206,7 @@ routes:
 Always set this on `listener` mode when using ACL rules. Without it, the listener cannot pass Consumer Group membership to the aggregated tools and ACL checks fail silently.
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/routes/mcp-unified/plugins | jq '.data[0].config.mode'` returns `"listener"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-unified/plugins | jq '.data[0].config.mode'` returns `"listener"`.
 
 ---
 

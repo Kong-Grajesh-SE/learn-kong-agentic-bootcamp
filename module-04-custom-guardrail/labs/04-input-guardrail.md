@@ -10,10 +10,10 @@
 
 ```bash
 # Kong 3.14+
-curl -s http://localhost:8001 | jq '.version'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID | jq '.version'
 
 # ai-proxy route and plugin must exist
-curl -s http://localhost:8001/routes/ai-proxy-chat | jq '.name'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat | jq '.name'
 # "ai-proxy-chat"
 
 # Guardrail service (simple HTTP classifier)
@@ -39,7 +39,7 @@ The MCP backend at `localhost:4000` includes a simple moderation endpoint. In pr
 The `ai-custom-guardrail` plugin must join an existing `ai-proxy` route. Check it exists:
 
 ```bash
-curl -s http://localhost:8001/routes/ai-proxy-chat | jq '{name, paths, methods}'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat | jq '{name, paths, methods}'
 ```
 
 Expected:
@@ -57,7 +57,7 @@ If this route doesn't exist, create it now:
 
 ```bash
 # Service
-curl -s -X POST http://localhost:8001/services \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services \
   -H "Content-Type: application/json" \
   -d '{
     "name": "openai-service",
@@ -66,7 +66,7 @@ curl -s -X POST http://localhost:8001/services \
   }' | jq '{id, name}'
 
 # Route
-curl -s -X POST http://localhost:8001/services/openai-service/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/openai-service/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-proxy-chat",
@@ -77,7 +77,7 @@ curl -s -X POST http://localhost:8001/services/openai-service/routes \
   }' | jq '{id, name}'
 
 # ai-proxy-advanced plugin
-curl -s -X POST http://localhost:8001/routes/ai-proxy-chat/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-proxy-advanced",
@@ -104,7 +104,7 @@ curl -s -X POST http://localhost:8001/routes/ai-proxy-chat/plugins \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/routes/ai-proxy-chat/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-custom-guardrail",
@@ -216,7 +216,7 @@ A blocked request returns `400` immediately - the upstream LLM is never called. 
 Review the full plugin config as Kong stored it:
 
 ```bash
-curl -s http://localhost:8001/routes/ai-proxy-chat/plugins \
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat/plugins \
   | jq '[.data[] | select(.name=="ai-custom-guardrail") | {
       id,
       name,

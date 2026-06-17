@@ -122,57 +122,16 @@ On Konnect: this is included in the Plus and Enterprise tiers. Request a 30-day 
 
 ---
 
-## 🖥️ Local Docker Data Plane (Kong 3.14)
+## 🖥️ Local Docker Services
 
-For labs that use the Admin API directly (`localhost:8001`), run a local Kong data plane:
+The labs require Docker services for the MCP backend and Keycloak (OAuth2). Kong itself runs on Konnect — you only need Docker for these supporting services:
 
 ```bash
-# Create a docker-compose.yml with Kong 3.14
-cat > docker-compose.yml <<'EOF'
-version: "3.8"
-services:
-  kong:
-    image: kong/kong-gateway:3.14
-    environment:
-      KONG_DATABASE: "off"
-      KONG_DECLARATIVE_CONFIG: /kong/declarative/kong.yaml
-      KONG_PROXY_LISTEN: "0.0.0.0:8000"
-      KONG_ADMIN_LISTEN: "0.0.0.0:8001"
-      KONG_AI_LICENSE: "${KONG_AI_LICENSE}"
-    ports:
-      - "8000:8000"
-      - "8001:8001"
-    volumes:
-      - ./kong.yaml:/kong/declarative/kong.yaml
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+# Start the MCP backend and Keycloak
+cd resources && docker compose up -d
 
-  mcp-backend:
-    image: node:20-alpine
-    working_dir: /app
-    command: npm start
-    ports:
-      - "3001:3001"
-    volumes:
-      - ./mcp-server:/app
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:24.0
-    command: start-dev --import-realm
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-    ports:
-      - "8080:8080"
-    volumes:
-      - ./keycloak/realm-workshop.json:/opt/keycloak/data/import/realm-workshop.json
-EOF
-
-# Start everything
-docker compose up -d
-
-# Verify Kong Admin API
-curl -s http://localhost:8001 | jq '.version'
+# Start Keycloak (for OAuth2/PKCE labs)
+cd resources/keycloak && docker compose up -d
 # "3.14.x"
 
 # Verify MCP backend

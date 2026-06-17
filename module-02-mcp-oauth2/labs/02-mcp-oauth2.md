@@ -10,10 +10,10 @@
 
 ```bash
 # Kong 3.14+
-curl -s http://localhost:8001 | jq '.version'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID | jq '.version'
 
 # mcp-backend Service from Module 01 must exist
-curl -s http://localhost:8001/services/mcp-backend | jq '.name'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend | jq '.name'
 # "mcp-backend"
 
 # Keycloak workshop realm must be up
@@ -30,7 +30,7 @@ This is a separate route from the unauthenticated routes in Module 01. Same back
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/services/mcp-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/mcp-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "mcp-oauth",
@@ -55,7 +55,7 @@ services:
 
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/routes/mcp-oauth | jq '.name'` returns `"mcp-oauth"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-oauth | jq '.name'` returns `"mcp-oauth"`.
 
 ---
 
@@ -67,7 +67,7 @@ Both plugins must be on the same route. Apply `ai-mcp-oauth2` first (auth runs b
 
 ```bash [Admin API]
 # Plugin 1: OAuth2 validation
-curl -s -X POST http://localhost:8001/routes/mcp-oauth/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-oauth/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-oauth2",
@@ -84,7 +84,7 @@ curl -s -X POST http://localhost:8001/routes/mcp-oauth/plugins \
   }' | jq '{id, name}'
 
 # Plugin 2: MCP passthrough proxy
-curl -s -X POST http://localhost:8001/routes/mcp-oauth/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/mcp-oauth/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "ai-mcp-proxy",

@@ -12,7 +12,7 @@ This lab continues from Lab 04-A. The `ai-custom-guardrail` plugin must already 
 
 ```bash
 # Verify plugin exists with request config
-curl -s http://localhost:8001/routes/ai-proxy-chat/plugins \
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat/plugins \
   | jq '[.data[] | select(.name=="ai-custom-guardrail") | {id, name}]'
 ```
 
@@ -23,7 +23,7 @@ curl -s http://localhost:8001/routes/ai-proxy-chat/plugins \
 Patch the existing plugin to add `config.response` (the OUTPUT phase). You need the plugin's `id` first:
 
 ```bash
-PLUGIN_ID=$(curl -s http://localhost:8001/routes/ai-proxy-chat/plugins \
+PLUGIN_ID=$(curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat/plugins \
   | jq -r '[.data[] | select(.name=="ai-custom-guardrail")][0].id')
 echo "Plugin ID: $PLUGIN_ID"
 ```
@@ -31,7 +31,7 @@ echo "Plugin ID: $PLUGIN_ID"
 ::: code-group
 
 ```bash [Admin API - PATCH]
-curl -s -X PATCH http://localhost:8001/plugins/$PLUGIN_ID \
+curl -s -X PATCH https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/plugins/$PLUGIN_ID \
   -H "Content-Type: application/json" \
   -d '{
     "config": {
@@ -119,7 +119,7 @@ curl -s -X POST http://localhost:8000/ai/proxy/chat \
 ::: code-group
 
 ```bash [Admin API - PATCH]
-curl -s -X PATCH http://localhost:8001/plugins/$PLUGIN_ID \
+curl -s -X PATCH https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/plugins/$PLUGIN_ID \
   -H "Content-Type: application/json" \
   -d '{
     "config": {
@@ -185,10 +185,10 @@ The steps below show the config pattern. You need a Mistral API key at `https://
 # Mistral Moderation API response shape:
 # { "id": "...", "model": "mistral-moderation-latest", "results": [{ "categories": {...}, "category_scores": {...} }] }
 
-PLUGIN_ID=$(curl -s http://localhost:8001/routes/ai-proxy-chat/plugins \
+PLUGIN_ID=$(curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/ai-proxy-chat/plugins \
   | jq -r '[.data[] | select(.name=="ai-custom-guardrail")][0].id')
 
-curl -s -X PATCH http://localhost:8001/plugins/$PLUGIN_ID \
+curl -s -X PATCH https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/plugins/$PLUGIN_ID \
   -H "Content-Type: application/json" \
   -d '{
     "config": {
@@ -226,7 +226,7 @@ Always inspect the raw response from your moderation API with `curl` before sett
 Inspect the final plugin state:
 
 ```bash
-curl -s http://localhost:8001/plugins/$PLUGIN_ID \
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/plugins/$PLUGIN_ID \
   | jq '{
     name,
     request_phase: .config.request.url,

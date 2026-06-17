@@ -10,7 +10,7 @@
 
 ```bash
 # Kong 3.14+
-curl -s http://localhost:8001 | jq '.version'
+curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID | jq '.version'
 
 # A2A backend endpoints
 curl -s http://localhost:3001/a2a/agents | jq '.[].name'
@@ -29,7 +29,7 @@ curl -s -X POST http://localhost:3001/a2a/flights \
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/services \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services \
   -H "Content-Type: application/json" \
   -d '{
     "name": "a2a-backend",
@@ -52,7 +52,7 @@ services:
 
 :::
 
-**✅ Checkpoint.** `curl -s http://localhost:8001/services/a2a-backend | jq '.name'` returns `"a2a-backend"`.
+**✅ Checkpoint.** `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/a2a-backend | jq '.name'` returns `"a2a-backend"`.
 
 ---
 
@@ -61,7 +61,7 @@ services:
 The Agent Card at `/.well-known/agent.json` is a public endpoint - no auth. Orchestrators fetch it to discover what skills are available.
 
 ```bash
-curl -s -X POST http://localhost:8001/services/a2a-backend/routes \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/a2a-backend/routes \
   -H "Content-Type: application/json" \
   -d '{
     "name": "a2a-discovery",
@@ -104,7 +104,7 @@ Expected:
 
 ```bash [Admin API]
 for AGENT in flights hotels weather; do
-  curl -s -X POST http://localhost:8001/services/a2a-backend/routes \
+  curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/a2a-backend/routes \
     -H "Content-Type: application/json" \
     -d "{
       \"name\": \"a2a-${AGENT}\",
@@ -147,7 +147,7 @@ services:
 
 :::
 
-**✅ Checkpoint.** All three routes created. `curl -s http://localhost:8001/services/a2a-backend/routes | jq '[.data[].name]'` lists four routes (including discovery).
+**✅ Checkpoint.** All three routes created. `curl -s https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/a2a-backend/routes | jq '[.data[].name]'` lists four routes (including discovery).
 
 ---
 
@@ -159,25 +159,25 @@ Agent-to-agent calls must be authenticated. Create an orchestrator Consumer and 
 
 ```bash [Admin API]
 # Create orchestrator Consumer
-curl -s -X POST http://localhost:8001/consumers \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers \
   -H "Content-Type: application/json" \
   -d '{"username":"orchestrator-agent","tags":["module-03"]}' \
   | jq '{id, username}'
 
 # Assign agent key
-curl -s -X POST http://localhost:8001/consumers/orchestrator-agent/key-auth \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/consumers/orchestrator-agent/key-auth \
   -H "Content-Type: application/json" \
   -d '{"key":"orchestrator-key-xyz"}' \
   | jq '{key, consumer: .consumer.username}'
 
 # Attach key-auth to flights route
-curl -s -X POST http://localhost:8001/routes/a2a-flights/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/a2a-flights/plugins \
   -H "Content-Type: application/json" \
   -d '{"name":"key-auth","config":{"key_names":["X-Agent-Key"],"hide_credentials":true}}' \
   | jq '{id, name}'
 
 # Attach key-auth to hotels route
-curl -s -X POST http://localhost:8001/routes/a2a-hotels/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/a2a-hotels/plugins \
   -H "Content-Type: application/json" \
   -d '{"name":"key-auth","config":{"key_names":["X-Agent-Key"],"hide_credentials":true}}' \
   | jq '{id, name}'
@@ -237,19 +237,19 @@ Different sub-agents have different cost and SLA profiles. Apply limits per rout
 
 ```bash [Admin API]
 # Flights: expensive - 30 calls/minute
-curl -s -X POST http://localhost:8001/routes/a2a-flights/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/a2a-flights/plugins \
   -H "Content-Type: application/json" \
   -d '{"name":"rate-limiting","config":{"minute":30,"policy":"local"}}' \
   | jq '{id, name}'
 
 # Hotels: moderate - 30 calls/minute
-curl -s -X POST http://localhost:8001/routes/a2a-hotels/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/a2a-hotels/plugins \
   -H "Content-Type: application/json" \
   -d '{"name":"rate-limiting","config":{"minute":30,"policy":"local"}}' \
   | jq '{id, name}'
 
 # Weather: cheap - 60 calls/minute
-curl -s -X POST http://localhost:8001/routes/a2a-weather/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/routes/a2a-weather/plugins \
   -H "Content-Type: application/json" \
   -d '{"name":"rate-limiting","config":{"minute":60,"policy":"local"}}' \
   | jq '{id, name}'
@@ -337,7 +337,7 @@ Attach at the Service level so every A2A request - across all sub-agents - is ca
 ::: code-group
 
 ```bash [Admin API]
-curl -s -X POST http://localhost:8001/services/a2a-backend/plugins \
+curl -s -X POST https://$KONNECT_REGION.api.konghq.com/v2/control-planes/$CP_ID/core-entities/services/a2a-backend/plugins \
   -H "Content-Type: application/json" \
   -d '{
     "name": "opentelemetry",
