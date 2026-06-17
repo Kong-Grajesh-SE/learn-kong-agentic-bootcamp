@@ -29,6 +29,7 @@ export default defineConfig({
     '.vitepress-cache/**',
     'README.md',
     '.github/**',
+    'resources/**',
   ],
 
   head: [
@@ -57,6 +58,10 @@ export default defineConfig({
         items: [
           { text: '✅ Prerequisites', link: '/prerequisites' },
           { text: '📦 Lab Resources', link: '/resources' },
+        ],
+      },
+      {
+        text: '📚 Modules',
         items: [
           { text: '01 - MCP Proxy (4 modes)',    link: '/module-01-mcp-proxy/' },
           { text: '02 - MCP + OAuth2',           link: '/module-02-mcp-oauth2/' },
