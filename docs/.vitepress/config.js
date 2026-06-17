@@ -56,10 +56,7 @@ export default defineConfig({
         text: '🚀 Getting Started',
         items: [
           { text: '✅ Prerequisites', link: '/prerequisites' },
-        ],
-      },
-      {
-        text: '📚 Modules',
+          { text: '📦 Lab Resources', link: '/resources' },
         items: [
           { text: '01 - MCP Proxy (4 modes)',    link: '/module-01-mcp-proxy/' },
           { text: '02 - MCP + OAuth2',           link: '/module-02-mcp-oauth2/' },
@@ -87,6 +84,7 @@ export default defineConfig({
         collapsed: false,
         items: [
           { text: '📋 Prerequisites', link: '/prerequisites' },
+          { text: '📦 Lab Resources', link: '/resources' },
         ],
       },
       {

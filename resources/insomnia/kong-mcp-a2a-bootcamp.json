@@ -1,0 +1,970 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2026-06-05T00:00:00.000Z",
+  "__export_source": "insomnia.desktop.app:v2025.3.0",
+  "resources": [
+    {
+      "_id": "wrk_mcp",
+      "parentId": null,
+      "_type": "workspace",
+      "name": "Kong MCP & A2A Bootcamp",
+      "description": "6-step MCP/A2A bootcamp with positive and negative test cases. Covers passthrough, key-auth, conversion, aggregation, OAuth2, and A2A agent routing.",
+      "scope": "collection"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_mcp",
+      "_type": "environment",
+      "name": "Base Environment",
+      "data": {
+        "proxy_url": "http://localhost:8000",
+        "mcp_key": "mcp-key-001",
+        "agent_key": "orchestrator-key-xyz",
+        "keycloak_url": "http://localhost:8080",
+        "keycloak_realm": "bootcamp"
+      }
+    },
+    {
+      "_id": "fld_01",
+      "parentId": "wrk_mcp",
+      "_type": "request_group",
+      "name": "01 - MCP Passthrough Listener"
+    },
+    {
+      "_id": "req_01_tools_list",
+      "parentId": "fld_01",
+      "_type": "request",
+      "name": "\u2705 List Tools (tools/list)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_01_search_flights",
+      "parentId": "fld_01",
+      "_type": "request",
+      "name": "\u2705 Call Tool: search_flights",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"search_flights\",\n    \"arguments\": {\"origin\": \"SFO\", \"destination\": \"LHR\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_01_get_weather",
+      "parentId": "fld_01",
+      "_type": "request",
+      "name": "\u2705 Call Tool: get_weather",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_weather\",\n    \"arguments\": {\"location\": \"LHR\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_01_search_hotels",
+      "parentId": "fld_01",
+      "_type": "request",
+      "name": "\u2705 Call Tool: search_hotels",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"search_hotels\",\n    \"arguments\": {\"location\": \"LHR\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "fld_02",
+      "parentId": "wrk_mcp",
+      "_type": "request_group",
+      "name": "02 - Key-Auth + Rate-Limiting"
+    },
+    {
+      "_id": "req_02_neg_no_key",
+      "parentId": "fld_02",
+      "_type": "request",
+      "name": "\u274c No API Key (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_02_pos_with_key",
+      "parentId": "fld_02",
+      "_type": "request",
+      "name": "\u2705 With API Key (200 + rate-limit headers)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "value": "{{ _.mcp_key }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_02_pos_call_with_key",
+      "parentId": "fld_02",
+      "_type": "request",
+      "name": "\u2705 Call Tool with Key",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "value": "{{ _.mcp_key }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"search_flights\",\n    \"arguments\": {\"origin\": \"SFO\", \"destination\": \"LHR\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_02_neg_wrong_key",
+      "parentId": "fld_02",
+      "_type": "request",
+      "name": "\u274c Wrong API Key (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/tools",
+      "headers": [
+        {
+          "name": "X-API-Key",
+          "value": "wrong-key-000"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "fld_03",
+      "parentId": "wrk_mcp",
+      "_type": "request_group",
+      "name": "03 - Conversion Listener (REST \u2192 MCP)"
+    },
+    {
+      "_id": "req_03_initialize",
+      "parentId": "fld_03",
+      "_type": "request",
+      "name": "\u2705 Initialize Session",
+      "description": "Save the mcp-session-id header from the response for subsequent requests.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/convert",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"initialize\",\n  \"params\": {\n    \"protocolVersion\": \"2025-03-26\",\n    \"capabilities\": {},\n    \"clientInfo\": {\"name\": \"insomnia\", \"version\": \"1.0\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_03_tools_list",
+      "parentId": "fld_03",
+      "_type": "request",
+      "name": "\u2705 List Converted Tools",
+      "description": "Requires mcp-session-id header from initialize response.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/convert",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_03_get_ip",
+      "parentId": "fld_03",
+      "_type": "request",
+      "name": "\u2705 Call get_ip (\u2192 GET /httpbun/ip)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/convert",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_ip\",\n    \"arguments\": {}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_03_echo",
+      "parentId": "fld_03",
+      "_type": "request",
+      "name": "\u2705 Call echo_anything (\u2192 POST /httpbun/anything)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/convert",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"echo_anything\",\n    \"arguments\": {\n      \"body\": {\"message\": \"Hello from MCP!\"}\n    }\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_03_get_headers",
+      "parentId": "fld_03",
+      "_type": "request",
+      "name": "\u2705 Call get_headers (\u2192 GET /httpbun/headers)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/convert",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 5,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_headers\",\n    \"arguments\": {}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_03_check_status",
+      "parentId": "fld_03",
+      "_type": "request",
+      "name": "\u2705 Call check_status (\u2192 GET /httpbun/status/200)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/convert",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 6,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"check_status\",\n    \"arguments\": {\"code\": 200}\n  }\n}"
+      }
+    },
+    {
+      "_id": "fld_04",
+      "parentId": "wrk_mcp",
+      "_type": "request_group",
+      "name": "04 - Multi-Team Aggregation"
+    },
+    {
+      "_id": "req_04_initialize",
+      "parentId": "fld_04",
+      "_type": "request",
+      "name": "\u2705 Initialize Aggregate Session",
+      "description": "Save the mcp-session-id header from the response.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/aggregate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 0,\n  \"method\": \"initialize\",\n  \"params\": {\n    \"protocolVersion\": \"2025-03-26\",\n    \"capabilities\": {},\n    \"clientInfo\": {\"name\": \"insomnia\", \"version\": \"1.0\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_04_tools_list",
+      "parentId": "fld_04",
+      "_type": "request",
+      "name": "\u2705 List All Tools (3 teams merged)",
+      "description": "Requires mcp-session-id header. Expected: check_status, echo_anything, get_headers, get_ip, get_user_agent.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/aggregate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_04_get_ip",
+      "parentId": "fld_04",
+      "_type": "request",
+      "name": "\u2705 Call get_ip (team-alpha)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/aggregate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_ip\",\n    \"arguments\": {}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_04_echo",
+      "parentId": "fld_04",
+      "_type": "request",
+      "name": "\u2705 Call echo_anything (team-beta)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/aggregate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"echo_anything\",\n    \"arguments\": {}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_04_check_status",
+      "parentId": "fld_04",
+      "_type": "request",
+      "name": "\u2705 Call check_status (team-gamma)",
+      "description": "Requires mcp-session-id header.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp/aggregate",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        },
+        {
+          "name": "mcp-session-id",
+          "value": "PASTE_SESSION_ID_HERE"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"check_status\",\n    \"arguments\": {\"code\": 404}\n  }\n}"
+      }
+    },
+    {
+      "_id": "fld_05",
+      "parentId": "wrk_mcp",
+      "_type": "request_group",
+      "name": "05 - MCP + OAuth2 (client_credentials & PKCE)"
+    },
+    {
+      "_id": "req_05_neg_no_token",
+      "parentId": "fld_05",
+      "_type": "request",
+      "name": "\u274c No Token (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-oauth/tools",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_05_get_token",
+      "parentId": "fld_05",
+      "_type": "request",
+      "name": "\ud83d\udd11 Get Token (client_credentials)",
+      "description": "Copy access_token from response and paste into the Bearer token requests below.",
+      "method": "POST",
+      "url": "{{ _.keycloak_url }}/realms/{{ _.keycloak_realm }}/protocol/openid-connect/token",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/x-www-form-urlencoded"
+        }
+      ],
+      "body": {
+        "mimeType": "application/x-www-form-urlencoded",
+        "params": [
+          {
+            "name": "grant_type",
+            "value": "client_credentials"
+          },
+          {
+            "name": "client_id",
+            "value": "mcp-service-client"
+          },
+          {
+            "name": "client_secret",
+            "value": "mcp-service-secret"
+          }
+        ]
+      }
+    },
+    {
+      "_id": "req_05_pos_with_token",
+      "parentId": "fld_05",
+      "_type": "request",
+      "name": "\u2705 List Tools with Bearer Token",
+      "description": "Replace PASTE_TOKEN_HERE with access_token from the Get Token request.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-oauth/tools",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer PASTE_TOKEN_HERE"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "req_05_pos_call_with_token",
+      "parentId": "fld_05",
+      "_type": "request",
+      "name": "\u2705 Call Tool with Bearer Token",
+      "description": "Replace PASTE_TOKEN_HERE with access_token from the Get Token request.",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-oauth/tools",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer PASTE_TOKEN_HERE"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"search_flights\",\n    \"arguments\": {\"origin\": \"SFO\", \"destination\": \"LHR\"}\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_05_neg_expired_token",
+      "parentId": "fld_05",
+      "_type": "request",
+      "name": "\u274c Expired/Invalid Token (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-oauth/tools",
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.expired.token"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Accept",
+          "value": "application/json, text/event-stream"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"tools/list\",\n  \"params\": {}\n}"
+      }
+    },
+    {
+      "_id": "fld_06",
+      "parentId": "wrk_mcp",
+      "_type": "request_group",
+      "name": "06 - A2A Agent Routing"
+    },
+    {
+      "_id": "req_06_agent_card",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u2705 Agent Card Discovery (public, no auth)",
+      "method": "GET",
+      "url": "{{ _.proxy_url }}/.well-known/agent.json",
+      "headers": []
+    },
+    {
+      "_id": "req_06_neg_flights_no_key",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u274c Flights: No Key (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/a2a/flights",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"t1\",\n  \"message\": {\n    \"role\": \"user\",\n    \"parts\": [{\"type\": \"text\", \"text\": \"SFO to LHR\"}]\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_06_pos_flights",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u2705 Flights: With Key (search SFO\u2192LHR)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/a2a/flights",
+      "headers": [
+        {
+          "name": "X-Agent-Key",
+          "value": "{{ _.agent_key }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"task-001\",\n  \"message\": {\n    \"role\": \"user\",\n    \"parts\": [{\"type\": \"text\", \"text\": \"Round-trip SFO to LHR June 15-22\"}]\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_06_neg_hotels_no_key",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u274c Hotels: No Key (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/a2a/hotels",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"t2\",\n  \"message\": {\n    \"role\": \"user\",\n    \"parts\": [{\"type\": \"text\", \"text\": \"Hotels near LHR\"}]\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_06_pos_hotels",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u2705 Hotels: With Key (search near LHR)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/a2a/hotels",
+      "headers": [
+        {
+          "name": "X-Agent-Key",
+          "value": "{{ _.agent_key }}"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"task-002\",\n  \"message\": {\n    \"role\": \"user\",\n    \"parts\": [{\"type\": \"text\", \"text\": \"Hotels near LHR June 15-22\"}]\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_06_pos_weather",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u2705 Weather: No Auth Required (60 req/min)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/a2a/weather",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"task-003\",\n  \"message\": {\n    \"role\": \"user\",\n    \"parts\": [{\"type\": \"text\", \"text\": \"Weather at LHR June 15\"}]\n  }\n}"
+      }
+    },
+    {
+      "_id": "req_06_neg_wrong_key",
+      "parentId": "fld_06",
+      "_type": "request",
+      "name": "\u274c Flights: Wrong Key (expect 401)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/a2a/flights",
+      "headers": [
+        {
+          "name": "X-Agent-Key",
+          "value": "wrong-agent-key"
+        },
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"id\": \"t4\",\n  \"message\": {\n    \"role\": \"user\",\n    \"parts\": [{\"type\": \"text\", \"text\": \"SFO to LHR\"}]\n  }\n}"
+      }
+    },
+    {
+      "_id": "fld_mcp_guardrails_07",
+      "_type": "request_group",
+      "parentId": "wrk_mcp",
+      "name": "07 - MCP Guardrails (OPA)",
+      "description": "OPA-based tool-call authorization \u2014 blocks dangerous tools and argument patterns",
+      "environment": {},
+      "metaSortKey": 7000,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_init",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "Initialize MCP session",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 1,\n  \"method\": \"initialize\",\n  \"params\": {\n    \"protocolVersion\": \"2024-11-05\",\n    \"capabilities\": {},\n    \"clientInfo\": {\n      \"name\": \"test\",\n      \"version\": \"1.0\"\n    }\n  }\n}"
+      },
+      "description": "Initialize MCP session \u2014 OPA allows lifecycle methods.",
+      "metaSortKey": 7001,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_tools_list",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "List tools (safe + dangerous)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 2,\n  \"method\": \"tools/list\"\n}"
+      },
+      "description": "Lists all tools including dangerous ones. OPA blocks at call time, not discovery.",
+      "metaSortKey": 7002,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_safe_weather",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "Safe: get_weather (expect 200)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 3,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_weather\",\n    \"arguments\": {\n      \"city\": \"Sydney\"\n    }\n  }\n}"
+      },
+      "description": "Safe tool call \u2014 OPA allows, server returns weather data.",
+      "metaSortKey": 7003,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_safe_calc",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "Safe: calculator (expect 200)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 4,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"calculator\",\n    \"arguments\": {\n      \"expression\": \"(3 + 5) * 2\"\n    }\n  }\n}"
+      },
+      "description": "Safe arithmetic \u2014 passes all OPA checks.",
+      "metaSortKey": 7004,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_blocked_shell",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "Blocked: execute_shell (expect 403)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 5,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"execute_shell\",\n    \"arguments\": {\n      \"cmd\": \"ls -la\"\n    }\n  }\n}"
+      },
+      "description": "Blocked by tool blocklist \u2014 execute_shell is denied by OPA.",
+      "metaSortKey": 7005,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_blocked_drop",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "Blocked: drop_database (expect 403)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 6,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"drop_database\",\n    \"arguments\": {\n      \"name\": \"production\"\n    }\n  }\n}"
+      },
+      "description": "Blocked by tool blocklist \u2014 drop_database is denied by OPA.",
+      "metaSortKey": 7006,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    },
+    {
+      "_id": "req_mcp_guard_blocked_args",
+      "_type": "request",
+      "parentId": "fld_mcp_guardrails_07",
+      "name": "Blocked: dangerous argument (expect 403)",
+      "method": "POST",
+      "url": "{{ _.proxy_url }}/mcp-secure",
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"jsonrpc\": \"2.0\",\n  \"id\": 7,\n  \"method\": \"tools/call\",\n  \"params\": {\n    \"name\": \"get_weather\",\n    \"arguments\": {\n      \"city\": \"rm -rf /tmp/data\"\n    }\n  }\n}"
+      },
+      "description": "Safe tool name, but argument matches rm -rf pattern \u2014 blocked by OPA argument scan.",
+      "metaSortKey": 7007,
+      "created": 1781101107494,
+      "modified": 1781101107494
+    }
+  ]
+}
